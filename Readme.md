@@ -1,0 +1,1 @@
+# Jogo de Casino de Adivinhação de Número
