@@ -12,12 +12,20 @@ void casino_rules(){
 }
 
 void entrada(char *nome, float *valor){
-
-    printf("\n\t   ============ CASINO ============");
-    printf("\n\t   Digite seu nome: ");
+    system("cls");
+    printf("\n\t   ============ CASINO ============\n");
+    printf("\t   Digite seu nome: ");
     scanf(" %s", nome);
-    printf("\n\t   Digite o a quantia para Iniciar: ");
-    scanf("%f", &*valor);
+
+    do {
+        printf("\t   Digite a quantia para iniciar (valor positivo): ");
+        scanf("%f", valor);
+
+        if (*valor <= 0) {
+            printf("\t   Por favor, insira um valor válido!\n");
+        }
+
+    } while (*valor <= 0);
 
 }
 
@@ -28,21 +36,32 @@ void jogo(){
     while (valor == 0 || valor < 0){
         entrada(nome, &valor);
     }
-    
+
     srand(time(NULL));
 
     while(true){
         float quant_aposta;
         int num_random = 1 + rand() % 10;
         int chute;
+
         system("cls");
         casino_rules();
         printf("\n\nValor atual: R$ %.2f", valor);
         printf("\nOpa %s, Nos fale sua Aposta: ", nome);
         scanf("%f", &quant_aposta);
+        
+        if (quant_aposta > valor){
+            printf("\nVocê não pode apostar mais do que possui!\n");
+            continue;
+        }
 
         printf("\nAdivinhe o numero certo que esta entre 1 a 10: ");
         scanf("%d", &chute);
+
+        if(chute < 1 || chute > 10){
+            printf("Por favor, digite um número entre 1 e 10.\n");
+            continue;
+        }
 
         if(chute == num_random){
             printf("\nParabens voce Venceu");
@@ -50,6 +69,11 @@ void jogo(){
         }else{
             printf("\nPutzz, boa sorte na proxima vez!! O numero era %d. Voce perdeu R$ %.2f", num_random, quant_aposta);
             valor -= quant_aposta;
+        }
+
+        if (valor <= 0) {
+            printf("\nVocê ficou sem saldo! Jogo encerrado.\n");
+            break;
         }
         
         char continuar;
@@ -59,7 +83,7 @@ void jogo(){
         if(continuar == 's' || continuar == 'S'){
             continue;
         }else if(continuar == 'n' || continuar == 'N'){
-            printf("\nJogo Encerrado!");
+            printf("\nJogo encerrado! Seu saldo final: R$ %.2f\n", valor);
             break;
         }
     }
@@ -67,4 +91,5 @@ void jogo(){
 
 int main(){
     jogo();
+    return 0;
 }
